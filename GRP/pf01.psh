@@ -1,0 +1,14 @@
+; パターンフェード
+ps.1.1
+
+tex		t0
+tex		t1
+
+//mov		r0, t0
+//add		r0.a, t1.a, c0.a	//最も閾値の高いピクセルフェード
+
+
+mov		r0, t0
+
+add_x2		r0.a, t1.a, c0.a
+//add_x4		r0.a, r0.a, r0.a

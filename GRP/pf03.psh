@@ -1,0 +1,21 @@
+; パターンフェード
+ps.1.1
+
+def	c1,	0,0,0,2
+
+tex		t0
+tex		t1
+
+//mov		r0, t0
+//add		r0.a, t1.a, c0.a	//最も閾値の高いピクセルフェード
+
+
+mov		r0, t0
+mov		r1, t1
+
+//add_x4		r1.a, r1.a, c0.a	//これを増やすと閾値が下がる
+
+add_x4		r0.a, t1.a, c0.a
+add_x4		r0.a, r0.a, r0.a
+
+//add		r0, t1, c0
