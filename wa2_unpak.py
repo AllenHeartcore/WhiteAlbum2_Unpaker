@@ -83,6 +83,7 @@ if magic == 0x5041434B:     # PACK
                 os.rename(fout.replace('.txt', '.tmp'), fout)
                 print(' (Converted to UTF-8)', end='')
             except UnicodeDecodeError:
+                os.remove(fout.replace('.txt', '.tmp'))
                 pass
 
         if fout.endswith('.bmp') or fout.endswith('.tga'):
