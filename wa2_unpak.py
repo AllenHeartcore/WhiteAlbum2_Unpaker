@@ -85,13 +85,14 @@ if magic == 0x5041434B:     # PACK
             except UnicodeDecodeError:
                 pass
 
-        if fout.endswith('.tga'):
+        if fout.endswith('.bmp') or fout.endswith('.tga'):
             try:
-                Image.open(fout).save(fout.replace('.tga', '.png'))
+                Image.open(fout).save(fout[:-4] + '.png')
                 os.remove(fout)
                 print(' (Converted to PNG)', end='')
             except ValueError:
                 pass
+
         print()
 
 
