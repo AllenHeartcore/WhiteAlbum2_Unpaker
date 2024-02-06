@@ -105,7 +105,8 @@ elif magic == 0x0043414C:     # LAC0
     for i in range(nentry):
 
         fpin.seek(8 + i * 40)
-        name    = tohex(fpin.read(32)).strip('0')
+        name    = fpin.read(32).strip(b'\0')
+        name    = ''.join([chr(255 - i) for i in name])
         size    = toint(fpin.read(4))
         offset  = toint(fpin.read(4))
         fpin.seek(offset)
@@ -113,9 +114,9 @@ elif magic == 0x0043414C:     # LAC0
         fout = '%s/%s' % (outpath, name)
         header = toint(fpin.read(4))
         if header == 0x5367674F:
-            fout += '.ogg'
+            assert name.endswith('.OGG')
         elif header == 0x46464952:
-            fout += '.wav'
+            assert name.endswith('.WAV')
         else:
             print('WARNING: Unrecognized audio format')
 
