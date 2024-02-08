@@ -24,13 +24,16 @@ for r, ds, fs in os.walk('Character'):
 
             # Crop whitespace
             sum_h = np.sum(alpha, axis=0)
-            lim_l, lim_r = 0, 0
-            while sum_h[lim_l + 1] == 0:
-                sum_h[lim_l] = 0
-                lim_l = np.argmax(sum_h > 0)
-            while sum_h[w - lim_r - 2] == 0:
-                sum_h[w - lim_r - 1] = 0
-                lim_r = np.argmax(sum_h[::-1] > 0)
+            sum_l = sum_h.copy()
+            sum_l[w // 2:] = 255 * 720
+            lim_l = w - np.argmin(sum_l[::-1])
+            if lim_l > 0 and sum_l[lim_l-1] != 0:
+                lim_l = 0
+            sum_r = sum_h.copy()
+            sum_r[:w // 2] = 255 * 720
+            lim_r = w - np.argmin(sum_r)
+            if lim_r > 0 and sum_r[::-1][lim_r-1] != 0:
+                lim_r = 0
             lim = np.minimum(lim_l, lim_r)
             if lim > 0:
                 img = img.crop((lim, 0, w - lim, h))
