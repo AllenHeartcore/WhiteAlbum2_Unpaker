@@ -3,8 +3,11 @@ import numpy as np
 from PIL import Image
 from tqdm import tqdm
 
-remove_bg = False
 thres_bg = 2
+
+
+
+print('Removing background...')
 
 for r, ds, fs in os.walk('Character'):
     for f in tqdm(fs):
@@ -14,8 +17,21 @@ for r, ds, fs in os.walk('Character'):
             arr = np.array(img)
             alpha = arr[:, :, 3]
             if alpha[0, 0] != 0:
-                remove_bg = True
-                alpha = np.maximum(alpha, thres_bg) - thres_bg
+                alpha = np.where(alpha <= thres_bg, 0, alpha)
+                arr[:, :, 3] = alpha
+                Image.fromarray(arr).save(os.path.join(r, f))
+
+
+
+print('Cropping whitespace...')
+
+for r, ds, fs in os.walk('Character'):
+    for f in tqdm(fs):
+        if f.endswith('.png'):
+
+            img = Image.open(os.path.join(r, f))
+            arr = np.array(img)
+            alpha = arr[:, :, 3]
             w, h = img.size
 
             sum_h = np.sum(alpha, axis=0)
@@ -28,26 +44,18 @@ for r, ds, fs in os.walk('Character'):
                 lim_r = np.argmax(sum_h[::-1] > 0)
             lim_h = np.minimum(lim_l, lim_r)
 
-            sum_v = np.sum(alpha, axis=1)
-            lim_v = 0
-            while sum_v[lim_v + 1] == 0:
-                sum_v[lim_v] = 0
-                lim_v = np.argmax(sum_v > 0)
-
-            if lim_h > 0 or lim_v > 0:
-                img = img.crop((lim_h, lim_v, w - lim_h, h))
+            if lim_h > 0:
+                img = img.crop((lim_h, 0, w - lim_h, h))
                 img.save(os.path.join(r, f))
 
-            if remove_bg:
-                # alpha = np.array(img)[:, :, 3]
-                # alpha = np.where(alpha <= thres_bg, 0, alpha)
-                # arr[:, :, 3] = alpha
-                # Image.fromarray(arr).save(os.path.join(r, f))
-                pass
+
+
+print('Unifying height...')
 
 for r, ds, fs in os.walk('Character'):
     for f in tqdm(fs):
         if f.endswith('.png'):
+
             img = Image.open(os.path.join(r, f))
             w, h = img.size
             assert h <= 720
