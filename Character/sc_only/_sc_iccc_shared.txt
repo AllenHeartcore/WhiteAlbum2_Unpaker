@@ -620,6 +620,15 @@ oto030106.png
 oto030107.png
 pap002101.png
 pap002102.png
+sat018001.png
+sat018002.png
+sat018003.png
+sat018004.png
+sat018005.png
+sat018006.png
+sat018007.png
+sat018009.png
+sat018010.png
 sat018011.png
 saw002001.png
 saw002002.png
